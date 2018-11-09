@@ -2300,3 +2300,53 @@ class CivXTestnet(CivX):
             return double_sha256(header)
         else:
             return hex_str_to_hash(CivXTestnet.GENESIS_HASH)
+
+class Diceme(Coin):
+    NAME = "Diceme"
+    SHORTNAME = "DIC"
+    NET = "mainnet"
+    XPUB_VERBYTES = bytes.fromhex("0488b21e")
+    XPRV_VERBYTES = bytes.fromhex("0488ade4")
+    P2PKH_VERBYTE = bytes.fromhex("1F")
+    P2SH_VERBYTES = [bytes.fromhex("5A")]
+    WIF_BYTE = bytes.fromhex("8B")
+    GENESIS_HASH = ('0000c7ca329b314d67203b48f6fab204'
+                    'bab7b2f999963c0b20e9d236ed35f9c9')
+    DESERIALIZER = lib_tx.DeserializerDiceme
+    TX_COUNT = 550
+    TX_COUNT_HEIGHT = 647
+    TX_PER_BLOCK = 5
+    RPC_PORT = 27271
+    PEERS = [
+        'electrum1.diceme.net s t',
+        'electrum2.diceme.net s t',
+    ]
+
+    def grshash(data):
+        import groestlcoin_hash
+        return groestlcoin_hash.getHash(data, len(data))
+
+    @classmethod
+    def header_hash(cls, header):
+        '''Given a header return the hash.'''
+        return cls.grshash(header)
+
+    ENCODE_CHECK = partial(Base58.encode_check, hash_fn=grshash)
+    DECODE_CHECK = partial(Base58.decode_check, hash_fn=grshash)
+
+
+class DicemeTestnet(Diceme):
+    SHORTNAME = "TGRS"
+    NET = "testnet"
+    XPUB_VERBYTES = bytes.fromhex("043587cf")
+    XPRV_VERBYTES = bytes.fromhex("04358394")
+    P2PKH_VERBYTE = bytes.fromhex("6f")
+    P2SH_VERBYTES = [bytes.fromhex("c4")]
+    WIF_BYTE = bytes.fromhex("ef")
+    GENESIS_HASH = ('00001107c9235c6e1ee44e2ee2679bcc'
+                    '2800b0472ee1862ff7b42bb20e48e62a')
+    RPC_PORT = 277281
+    PEERS = [
+        'electrum-test1.diceme.net s t',
+        'electrum-test2.diceme.net s t',
+    ]
