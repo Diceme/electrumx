@@ -623,3 +623,6 @@ class DeserializerDecred(Deserializer):
             expiry,
             witness
         ), tx_hash, self.cursor - start
+
+class DeserializerDiceme(DeserializerSegWit):
+    TX_HASH_FN = staticmethod(sha256)
